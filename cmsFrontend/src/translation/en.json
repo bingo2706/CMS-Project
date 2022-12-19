@@ -1,0 +1,18 @@
+{
+    "sidebar": {
+        "titleJob": "Software Engineer",
+        "dashboard": "Dashboard",
+        "user": "User",
+        "project": "Project",
+        "trash": "Trash"
+    },
+    "dashboardPage": {
+        "dashboard": "DASHBOARD",
+        "subtitle": "Welcome to your dashboard",
+        "emailSent": "Emails Sent",
+        "SalesObtained": "Sales Obtained",
+        "NewClients": "New Clients",
+        "TrafficReceived": "Traffic Received",
+        "exportReport": "Export Report"
+    }
+}

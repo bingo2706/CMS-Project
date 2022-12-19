@@ -2,7 +2,7 @@ import express from "express";
 let router = express.Router();
 import userController from '../controllers/userController'
 import allcodeController from '../controllers/allcodeController'
-
+import projectController from '../controllers/projectController'
 
 let initwebRoutes = (app) => {
     router.get("/", (req, res) => {
@@ -14,9 +14,18 @@ let initwebRoutes = (app) => {
     router.delete('/api/delete-user',  userController.handleDeleteUser)
     router.get('/api/get-all-user',  userController.getAllUser)
     router.get('/api/get-detail-user-by-id', userController.getDetailUserById)
-
+    router.put('/api/restore-user',  userController.handleRestoreUser)
+    router.put('/api/soft-delete-user', userController.handleSoftDeleteUser)
+    router.post('/api/login', userController.handleLogin)
+    
     //====================API ALLCODE========================//
     router.get('/api/get-all-code', allcodeController.getAllCodeService)
+
+    //====================API PROJECT========================//
+     router.post('/api/create-new-project', projectController.handleCreateNewProject)
+    // router.put('/api/update-project',  projectController.handleUpdateProject)
+    // router.get('/api/get-all-project',  projectController.getAllProject)
+    // router.get('/api/get-detail-project-by-id', projectController.getDetailProjectById)
     return app.use("/", router);
 }
 

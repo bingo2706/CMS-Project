@@ -1,0 +1,18 @@
+{
+    "sidebar": {
+        "titleJob": "Kỹ sư phần mềm",
+        "dashboard": "Trang chủ",
+        "user": "Người dùng",
+        "project": "Dự án",
+        "trash": "Thùng rác"
+    },
+    "dashboardPage": {
+        "dashboard": "TRANG CHỦ",
+        "subtitle": "Chào mừng bạn đến với trang chủ",
+        "emailSent": "Gửi thư",
+        "SalesObtained": "Doanh số thu được",
+        "NewClients": "Khách hàng mới",
+        "TrafficReceived": "Lưu lượng truy cập",
+        "exportReport": "Xuất báo cáo"
+    }
+}

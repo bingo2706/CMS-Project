@@ -74,27 +74,18 @@ let handleCreateNewUser = (data) => {
     })
 }
 
-let deleteUser = (userId) => {
+let deleteUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
 
-            if (!userId) {
+            if (data.ids.length <=0 ) {
                 resolve({
                     errCode: 1,
                     errMessage: `Missing required parameters !`
                 })
             } else {
-                let foundUser = await db.User.findOne({
-                    where: { id: userId }
-                })
-                if (!foundUser) {
-                    resolve({
-                        errCode: 2,
-                        errMessage: `The user isn't exist`
-                    })
-                }
                 await db.User.destroy({
-                    where: { id: userId }
+                    where: { id: data.ids }
                 })
                 resolve({
                     errCode: 0,
@@ -110,7 +101,7 @@ let deleteUser = (userId) => {
 let updateUserData = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.id || !data.genderId) {
+            if (!data.id) {
                 resolve({
                     errCode: 2,
                     errMessage: `Missing required parameters`
@@ -123,8 +114,6 @@ let updateUserData = (data) => {
                 if (user) {
                     user.firstName = data.firstName
                     user.lastName = data.lastName
-                    user.roleId = data.roleId
-                    user.genderId = data.genderId
                     user.phonenumber = data.phonenumber
                     user.dob = data.dob
                     if (data.image) {
@@ -151,8 +140,9 @@ let updateUserData = (data) => {
 let getAllUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+           
             let objectFilter = {
-                where: { isDeleted: false },
+                where: { isDeleted: data.isDeleted },
                 attributes: {
                     exclude: ['password', 'image']
                 },
@@ -191,7 +181,7 @@ let getDetailUserById = (userid) => {
                 })
             } else {
                 let res = await db.User.findOne({
-                    where: { id: userid, statusId: 'S1' },
+                    where: { id: userid, isDeleted: false },
                     attributes: {
                         exclude: ['password']
                     },
@@ -215,11 +205,125 @@ let getDetailUserById = (userid) => {
         }
     })
 }
+let handleSoftDeleteUser = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+                    
+                    await db.User.update({isDeleted : data.isDeleted},{where:{id:data.ids}})
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'Update the user succeeds!'
+                    })
+             
+                
+           
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+let handleRestoreUser = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                resolve({
+                    errCode: 2,
+                    errMessage: `Missing required parameters`
+                })
+            } else {
+                let user = await db.User.findOne({
+                    where: { id: data.id },
+                    raw: false
+                })
+                if (user) {
+                    user.isDeleted = false
+                   
+                    await user.save();
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'Update the user succeeds!'
+                    })
+                } else {
+                    resolve({
+                        errCode: 1,
+                        errMessage: 'User not found!'
+                    })
+                }
+            }  
+                    
+             
+                
+           
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
+let handleLogin = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            if (!data.email || !data.password) {
+                resolve({
+                    errCode: 4,
+                    errMessage: 'Missing required parameters!'
+                })
+            }
+            else {
+                let userData = {};
+
+                let isExist = await checkUserEmail(data.email);
+
+                if (isExist === true) {
+                    let user = await db.User.findOne({
+                        attributes: ['email', 'roleId', 'password', 'firstName', 'lastName', 'id','image'],
+                        where: { email: data.email, isDeleted: 0 },
+                        raw: true
+                    })
+                    if (user) {
+                        let check = await bcrypt.compareSync(data.password, user.password);
+                        if (check) {
+                            userData.errCode = 0;
+                            userData.errMessage = 'Ok';
+                            if (user.image) {
+                                user.image = new Buffer(user.image, 'base64').toString('binary');
+                            }
+                            delete user.password;
+
+                            userData.user = user;
+                           
+                        } else {
+                            userData.errCode = 3;
+
+                            userData.errMessage = 'Wrong password';
+                        }
+                    } else {
+                        userData.errCode = 2;
+                        userData.errMessage = 'User not found!'
+                    }
+                } else {
+                    userData.errCode = 1;
+                    userData.errMessage = `Your's email isn't exist in your system. plz try other email`
+                }
+                resolve(userData)
+            }
+
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 module.exports = {
     handleCreateNewUser: handleCreateNewUser,
     deleteUser: deleteUser,
     updateUserData: updateUserData,
     getAllUser: getAllUser,
     getDetailUserById: getDetailUserById,
-   
+    handleSoftDeleteUser:handleSoftDeleteUser,
+    handleRestoreUser:handleRestoreUser,
+    handleLogin:handleLogin
 }

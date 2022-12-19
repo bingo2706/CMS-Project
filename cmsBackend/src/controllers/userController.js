@@ -27,7 +27,7 @@ let handleUpdateUser = async (req, res) => {
 }
 let handleDeleteUser = async (req, res) => {
     try {
-        let data = await userService.deleteUser(req.body.id);
+        let data = await userService.deleteUser(req.body);
         return res.status(200).json(data);
     } catch (error) {
         console.log(error)
@@ -61,12 +61,50 @@ let getDetailUserById = async (req, res) => {
         })
     }
 }
-
+let handleSoftDeleteUser = async (req, res) => {
+    try {
+        let data = await userService.handleSoftDeleteUser(req.body);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+let handleRestoreUser = async (req, res) => {
+    try {
+        let data = await userService.handleRestoreUser(req.body);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
+let handleLogin = async (req, res) => {
+    try {
+        let data = await userService.handleLogin(req.body);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server'
+        })
+    }
+}
 module.exports = {
     handleCreateNewUser: handleCreateNewUser,
     handleUpdateUser: handleUpdateUser,
     handleDeleteUser: handleDeleteUser,
     getAllUser: getAllUser,
     getDetailUserById: getDetailUserById,
+    handleSoftDeleteUser:handleSoftDeleteUser,
+    handleRestoreUser:handleRestoreUser,
+    handleLogin:handleLogin
   
 }

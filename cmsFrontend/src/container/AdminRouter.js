@@ -1,12 +1,14 @@
 import Dashboard from '../container/dashboard/index';
 import Sidebar from '../container/global/Sidebar';
 import User from '../container/user/index';
+import Project from '../container/Project/index';
 import AddUser from '../container/user/AddUser';
 import Topbar from '../container/global/Topbar';
 import DetailUser from '../container/user/DetailUser';
 import TrashPage from '../container/Trash/TrashPage';
 import { Route, Routes } from 'react-router-dom';
 import AddProject from './Project/AddProject';
+import DetailProject from './Project/DetailProject';
 export default function AdminRouter() {
     return (
         <>
@@ -20,6 +22,9 @@ export default function AdminRouter() {
                     <Route path="/user/addUser" element={<AddUser />} />
                     <Route path="/user/detail/:id" element={<DetailUser />} />
                     <Route path="/project/addProject" element={<AddProject />} />
+                    <Route path="/project/editProject/:id" element={<AddProject />} />
+                    <Route path="/project" element={<Project />} />
+                    <Route path="/project/detail/:id" element={<DetailProject />} />
                     <Route path="/trash" element={<TrashPage />} />
                 </Routes>
             </main>

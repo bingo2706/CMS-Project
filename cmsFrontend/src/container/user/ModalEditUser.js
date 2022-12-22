@@ -9,6 +9,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
+import { FORMAT } from '../../utils/constant';
 export default function ModalEditUser(props) {
     const { open, data } = props;
     const handleClose = () => {
@@ -68,7 +69,7 @@ export default function ModalEditUser(props) {
                         <Stack sx={{ marginTop: '10px' }}>
                             <DesktopDatePicker
                                 label="Date of birth"
-                                inputFormat="MM/DD/YYYY"
+                                inputFormat={FORMAT.FORMAR_DATE}
                                 value={inputValues.dob}
                                 name="dob"
                                 onChange={(value) => setInputValues({ ...inputValues, dob: value['$d'] })}

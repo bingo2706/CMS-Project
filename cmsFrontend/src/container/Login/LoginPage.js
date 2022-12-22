@@ -6,27 +6,32 @@ import { useState } from 'react';
 import { handleLoginService } from '../../services/userService';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
+import { TYPE_LOGIN } from '../../utils/constant';
 export default function LoginPage() {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const navigate = useNavigate();
+    const { loginWithRedirect } = useAuth0();
     const [inputValues, setInputValues] = useState({
         email: '',
         password: '',
     });
+
     const handleOnChange = (event) => {
         const { name, value } = event.target;
         setInputValues({ ...inputValues, [name]: value });
     };
     const handleLogin = async () => {
+        localStorage.setItem(TYPE_LOGIN.TYPE_LOGIN, TYPE_LOGIN.TRADITIONAL);
         let res = await handleLoginService({
             email: inputValues.email,
             password: inputValues.password,
         });
         if (res && res.errCode === 0) {
-            localStorage.setItem('userData', JSON.stringify(res.user));
+            localStorage.setItem(TYPE_LOGIN.USER_DATA, JSON.stringify(res.user));
 
-            if (res.user.roleId === 'R1') {
+            if (res.user.roleId === TYPE_LOGIN.ROLE_ADMIN) {
                 navigate('/admin');
             } else {
                 navigate('/');
@@ -34,6 +39,10 @@ export default function LoginPage() {
         } else {
             toast.error(res.errMessage);
         }
+    };
+    const handleLoginOauth = () => {
+        localStorage.setItem(TYPE_LOGIN.TYPE_LOGIN, TYPE_LOGIN.OAUTH);
+        loginWithRedirect();
     };
     return (
         <Box display={'flex'} margin="0 auto" justifyContent="center" width={'100%'} alignItems={'center'}>
@@ -86,6 +95,15 @@ export default function LoginPage() {
                     style={{ fontWeight: 700, fontSize: '14px' }}
                 >
                     Sign In
+                </Button>
+                <Button
+                    onClick={() => handleLoginOauth()}
+                    variant="contained"
+                    color="redAccent"
+                    fullWidth
+                    style={{ fontWeight: 700, fontSize: '14px' }}
+                >
+                    Login with oAuth
                 </Button>
             </Box>
         </Box>

@@ -1,10 +1,10 @@
 import { Box, TextField, Autocomplete, Typography, useTheme, Stack, Button } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Header from '../../components/Header';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFetchAllcode } from '../../container/customize/fetchAllcode';
 import { useFetchAllUser } from '../../container/customize/fetchAllUser';
-import { createNewProject } from '../../services/userService';
+import { createNewProject, getDetailProjectById, UpdateProjectService } from '../../services/userService';
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
@@ -13,10 +13,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { toast } from 'react-toastify';
+import { FORMAT, TYPE_ALLCODE } from '../../utils/constant';
+import { useParams } from 'react-router-dom';
 export default function AddProject() {
     const mdParser = new MarkdownIt();
     const isNonMobile = useMediaQuery('(min-width:600px)');
     const theme = useTheme();
+    const { id } = useParams();
     const colors = tokens(theme.palette.mode);
     const [inputValues, setInputValues] = useState({
         name: '',
@@ -25,11 +28,36 @@ export default function AddProject() {
         contentHTML: '',
         startDate: '',
         endDate: '',
-        arrUserId: [],
         statusProjectOptions: '',
+        arrUser: [],
+        isAddAction: true,
     });
-    var { data: dataStatusProject } = useFetchAllcode('STATUSPROJECT');
+    var { data: dataStatusProject } = useFetchAllcode(TYPE_ALLCODE.STATUSPROJECT);
     var { data: dataUser } = useFetchAllUser('', '', '', 0);
+
+    useEffect(() => {
+        if (id) {
+            fetchDataProject(id);
+        }
+    }, [id]);
+    let fetchDataProject = async (id) => {
+        let res = await getDetailProjectById(id);
+        if (res && res.errCode === 0) {
+            let { data } = res;
+            console.log(data);
+            setInputValues({
+                name: data.name,
+                statusId: data.statusId,
+                contentMarkdown: data.contentMarkdown,
+                contentHTML: data.contentHTML,
+                startDate: data.startDate,
+                endDate: data.endDate,
+                arrUser: data.userData,
+                statusProjectOptions: data.statusId,
+                isAddAction: false,
+            });
+        }
+    };
     const handleOnChange = (event) => {
         const { name, value } = event.target;
         setInputValues({ ...inputValues, [name]: value });
@@ -42,36 +70,55 @@ export default function AddProject() {
         });
     };
     const handleCreateProject = async () => {
-        console.log('inputValues', inputValues);
-        let res = await createNewProject({
+        let arrUserId = inputValues.arrUser.map((item) => {
+            return {
+                userId: item.id,
+            };
+        });
+        let objectData = {
             name: inputValues.name,
             statusId: inputValues.statusId,
             contentMarkdown: inputValues.contentMarkdown,
             contentHTML: inputValues.contentHTML,
             startDate: inputValues.startDate,
             endDate: inputValues.endDate,
-            arrUserId: inputValues.arrUserId,
-        });
-        if (res && res.errCode === 0) {
-            toast.success('Create new project successfully !');
-            setInputValues({
-                ...inputValues,
-                name: '',
-                statusId: '',
-                contentMarkdown: '',
-                contentHTML: '',
-                startDate: '',
-                endDate: '',
-                arrUserId: [],
-                statusProjectOptions: '',
-            });
+            arrUserId: arrUserId,
+            id: id,
+        };
+        if (inputValues.isAddAction) {
+            let res = await createNewProject(objectData);
+            if (res && res.errCode === 0) {
+                toast.success('Create new project successfully !');
+                setInputValues({
+                    ...inputValues,
+                    name: '',
+                    statusId: '',
+                    contentMarkdown: '',
+                    contentHTML: '',
+                    startDate: '',
+                    endDate: '',
+                    arrUser: [],
+                    statusProjectOptions: '',
+                });
+            } else {
+                toast.error(res.errMessage);
+            }
         } else {
-            toast.error(res.errMessage);
+            let res = await UpdateProjectService(objectData);
+            if (res && res.errCode === 0) {
+                toast.success('Update project successfully !');
+            } else {
+                toast.error(res.errMessage);
+            }
         }
     };
+
     return (
         <Box padding="20px 20px 40px 20px">
-            <Header title="CREATE PROJECT" subtitle="Create a New Project" />
+            <Header
+                title={inputValues.isAddAction ? 'CREATE PROJECT' : 'UPDATE PROJECT'}
+                subtitle={inputValues.isAddAction ? 'Create a New Project' : 'Update a Project'}
+            />
             <Box
                 display="grid"
                 gap="30px"
@@ -86,7 +133,7 @@ export default function AddProject() {
                     type="text"
                     label="Name"
                     onChange={(e) => handleOnChange(e)}
-                    value={inputValues.firstName}
+                    value={inputValues.name}
                     name="name"
                     color="secondary"
                     sx={{ gridColumn: 'span 2' }}
@@ -116,7 +163,7 @@ export default function AddProject() {
                     <Stack sx={{ gridColumn: 'span 2' }} spacing={3}>
                         <DesktopDatePicker
                             label="Start Date"
-                            inputFormat="MM/DD/YYYY"
+                            inputFormat={FORMAT.FORMAR_DATE}
                             value={inputValues.startDate}
                             name="startDate"
                             onChange={(value) => setInputValues({ ...inputValues, startDate: value['$d'] })}
@@ -126,7 +173,7 @@ export default function AddProject() {
                     <Stack sx={{ gridColumn: 'span 2' }} spacing={3}>
                         <DesktopDatePicker
                             label="End Date"
-                            inputFormat="MM/DD/YYYY"
+                            inputFormat={FORMAT.FORMAR_DATE}
                             value={inputValues.endDate}
                             name="endDate"
                             onChange={(value) => setInputValues({ ...inputValues, endDate: value['$d'] })}
@@ -140,20 +187,20 @@ export default function AddProject() {
                     options={dataUser}
                     getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
                     onChange={(event, newValue) => {
+                        console.log(newValue);
                         setInputValues({
                             ...inputValues,
-                            arrUserId: newValue.map((item) => {
-                                return { userId: item.id };
-                            }),
+                            arrUser: newValue,
                         });
                     }}
+                    value={inputValues.arrUser}
                     filterSelectedOptions
                     renderInput={(params) => <TextField color="secondary" fullWidth variant="outlined" {...params} label="Team member" />}
                     disablePortal
                     sx={{ gridColumn: 'span 4' }}
                 />
                 <Button onClick={() => handleCreateProject()} type="submit" color="secondary" variant="contained">
-                    CREATE NEW PROJECT
+                    {inputValues.isAddAction ? 'CREATE NEW PROJECT' : 'UPDATE PROJECT'}
                 </Button>
             </Box>
         </Box>

@@ -8,6 +8,7 @@ import { getDetailUserById, UpdateUserService } from '../../services/userService
 import moment from 'moment';
 import ModalEditUser from './ModalEditUser';
 import { toast } from 'react-toastify';
+import { FORMAT } from '../../utils/constant';
 const DetailUser = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -44,13 +45,18 @@ const DetailUser = () => {
         }
     };
     const renderInfoLine = (label, value) => {
+        if (Array.isArray(value) === true) {
+            value = value.map((item) => {
+                return item.data.name;
+            });
+        }
         return (
             <Box display={'flex'} alignItems="center" justifyContent={'space-between'} padding="0px 20px 0 10px">
                 <Typography variant="h5" color={colors.grey[100]}>
                     {label}
                 </Typography>
                 <Typography variant="h5" color={colors.grey[100]}>
-                    {value}
+                    {Array.isArray(value) === true ? value.toString().replace(',', ', ') : value}
                 </Typography>
             </Box>
         );
@@ -66,7 +72,7 @@ const DetailUser = () => {
                     alignItems="center"
                     justifyContent="center"
                     flexDirection={'column'}
-                    flex={2}
+                    flex={3}
                 >
                     <img
                         style={{ width: '100px', height: '100px', borderRadius: 10, objectFit: 'cover' }}
@@ -88,7 +94,16 @@ const DetailUser = () => {
                     {renderInfoLine('First Name', dataUser.firstName)}
                     {renderInfoLine('Last Name', dataUser.lastName)}
                     {renderInfoLine('Phone Number', dataUser.phonenumber)}
-                    {renderInfoLine('Date of birth', moment(dataUser.dob).format('DD/MM/YYYY'))}
+                    {renderInfoLine('Date of birth', moment(dataUser.dob).format(FORMAT.FORMAR_DATE))}
+                </Box>
+                <Box backgroundColor={colors.primary[400]} display="flex" flexDirection={'column'} flex={2}>
+                    <Box display={'flex'} alignItems="center" justifyContent={'space-between'} padding="10px 10px 20px 10px">
+                        <Typography variant="h4" color={colors.grey[100]} fontWeight="bold">
+                            Project Info
+                        </Typography>
+                    </Box>
+                    {renderInfoLine('Member of', dataUser.projectData)}
+                    {renderInfoLine('Role of', dataUser && dataUser.roleData ? dataUser.roleData.value : '')}
                 </Box>
             </Box>
             {isOpen && <ModalEditUser handleUpdateUser={handleUpdateUser} data={dataUser} open={isOpen} handleClose={handleClose} />}

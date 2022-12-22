@@ -8,6 +8,8 @@ import { useTheme } from '@mui/material';
 import { tokens } from '../theme';
 import { useDispatch } from 'react-redux';
 import { changeLanguageStart } from '../redux/action/LanguageAction';
+import { FLAG_URL } from '../utils/constant';
+import { USER_REFERENCE } from '../utils/constant';
 export default function Language() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const theme = useTheme();
@@ -15,16 +17,26 @@ export default function Language() {
     const open = Boolean(anchorEl);
 
     const AvatarUrl = {
-        vi: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/1280px-Flag_of_Vietnam.svg.png',
-        en: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/ae/Flag_of_the_United_Kingdom.svg/800px-Flag_of_the_United_Kingdom.svg.png',
+        vi: FLAG_URL.VI,
+        en: FLAG_URL.EN,
     };
-    const [url, seturl] = React.useState(AvatarUrl.vi);
+    const fetchUserReference = () => {
+        let userReference = JSON.parse(localStorage.getItem(USER_REFERENCE.USER_REFERENCE));
+        if (userReference.language) {
+            return userReference.language;
+        } else {
+            return 'vi';
+        }
+    };
+    const [url, seturl] = React.useState(AvatarUrl[fetchUserReference()]);
     const dispatch = useDispatch();
     const handleClick = (event, value) => {
         setAnchorEl(event.currentTarget);
         if (value) {
             seturl(AvatarUrl[value]);
             dispatch(changeLanguageStart(value));
+            let userReference = JSON.parse(localStorage.getItem(USER_REFERENCE.USER_REFERENCE));
+            localStorage.setItem(USER_REFERENCE.USER_REFERENCE, JSON.stringify({ ...userReference, language: value }));
         }
     };
     const handleClose = () => {

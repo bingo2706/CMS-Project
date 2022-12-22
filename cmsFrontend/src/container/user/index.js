@@ -7,21 +7,29 @@ import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import Header from '../../components/Header';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
-import ModalDeleteUser from './ModalDeleteUser';
+import ModalDelete from '../../components/ModalDelete';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PageviewOutlinedIcon from '@mui/icons-material/PageviewOutlined';
+import { USER_REFERENCE } from '../../utils/constant';
 const Team = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [dataUser, setdataUser] = useState([]);
     const [arrUserId, setarrUserId] = useState([]);
     const [isOpenDeleteModal, setisOpenDeleteModal] = useState(false);
-
+    const [ColumnVisibilityModel, setColumnVisibilityModel] = useState({});
     useEffect(() => {
         fetchUser();
+        fetchUserReference();
     }, []);
+    const fetchUserReference = () => {
+        let userReference = JSON.parse(localStorage.getItem(USER_REFERENCE.USER_REFERENCE));
+        if (userReference) {
+            setColumnVisibilityModel(userReference.tableUser);
+        }
+    };
     const fetchUser = async () => {
         let res = await getAllUsers({
             limit: '',
@@ -62,6 +70,11 @@ const Team = () => {
     };
     const handleSoftDeleteUser = () => {
         setisOpenDeleteModal(true);
+    };
+    const handleOnchangeColumns = (newModel) => {
+        let userReference = JSON.parse(localStorage.getItem(USER_REFERENCE.USER_REFERENCE));
+        localStorage.setItem(USER_REFERENCE.USER_REFERENCE, JSON.stringify({ ...userReference, tableUser: newModel }));
+        setColumnVisibilityModel(newModel);
     };
     const columns = [
         { field: 'id', headerName: 'ID' },
@@ -187,9 +200,19 @@ const Team = () => {
                     checkboxSelection
                     rows={dataUser}
                     columns={columns}
+                    columnVisibilityModel={ColumnVisibilityModel}
+                    onColumnVisibilityModelChange={(newModel) => handleOnchangeColumns(newModel)}
                 />
             </Box>
-            {isOpenDeleteModal && <ModalDeleteUser handleAgree={handleAgree} open={isOpenDeleteModal} handleClose={handleClose} />}
+            {isOpenDeleteModal && (
+                <ModalDelete
+                    content={'The user deletion can still be restored in the recycle bin. Please be careful'}
+                    title={'Are you sure you want to delete the user?'}
+                    handleAgree={handleAgree}
+                    open={isOpenDeleteModal}
+                    handleClose={handleClose}
+                />
+            )}
         </Box>
     );
 };

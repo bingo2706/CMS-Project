@@ -102,13 +102,13 @@ export default function Sidebar() {
                                 alt="profile-user"
                                 width="100px"
                                 height="100px"
-                                src={dataUser.image}
+                                src={dataUser?.image}
                                 style={{ cursor: 'pointer', borderRadius: '50%', objectFit: 'cover' }}
                             />
                         </Box>
                         <Box textAlign="center">
                             <Typography variant="h2" color={colors.grey[100]} fontWeight="bold" sx={{ m: '10px 0 0 0' }}>
-                                {dataUser.firstName + ' ' + dataUser.lastName}
+                                {dataUser?.firstName + ' ' + dataUser?.lastName}
                             </Typography>
                             <Typography variant="h5" color={colors.greenAccent[500]}>
                                 <FormattedMessage id="sidebar.titleJob" />

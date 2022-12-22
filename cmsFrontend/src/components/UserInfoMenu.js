@@ -11,11 +11,14 @@ import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import { useNavigate } from 'react-router-dom';
 import { useFetchUserInfo } from '../container/customize/fetchInfoUser';
+import { useAuth0 } from '@auth0/auth0-react';
+import { TYPE_LOGIN } from '../utils/constant';
 export default function UserInfoMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const navigate = useNavigate();
     const { data: dataUser } = useFetchUserInfo();
+    const { logout } = useAuth0();
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -23,9 +26,8 @@ export default function UserInfoMenu() {
         setAnchorEl(null);
     };
     const handleLogout = () => {
-        localStorage.removeItem('userData');
-
-        navigate('/login');
+        localStorage.removeItem(TYPE_LOGIN.USER_DATA);
+        logout({ returnTo: `${window.location.origin}/login` });
     };
     const handleGotoAcount = () => {
         navigate(`user/detail/${dataUser.id}`);

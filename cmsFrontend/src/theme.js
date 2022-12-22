@@ -1,6 +1,6 @@
-import { createContext, useState, useMemo } from 'react';
+import { createContext, useState, useMemo, useEffect } from 'react';
 import { createTheme } from '@mui/material/styles';
-
+import { USER_REFERENCE } from './utils/constant';
 // color design tokens export
 export const tokens = (mode) => ({
     ...(mode === 'dark'
@@ -206,11 +206,28 @@ export const ColorModeContext = createContext({
 });
 
 export const useMode = () => {
-    const [mode, setMode] = useState('dark');
-
+    const [mode, setMode] = useState();
+    useEffect(() => {
+        let userReference = JSON.parse(localStorage.getItem(USER_REFERENCE.USER_REFERENCE));
+        if (userReference.them) {
+            setMode(userReference.them);
+        } else {
+            setMode('dark');
+        }
+    }, []);
+    const handleOnchangeMode = () => {
+        setMode((prev) => {
+            let userReference = JSON.parse(localStorage.getItem(USER_REFERENCE.USER_REFERENCE));
+            localStorage.setItem(
+                USER_REFERENCE.USER_REFERENCE,
+                JSON.stringify({ ...userReference, them: prev === 'light' ? 'dark' : 'light' }),
+            );
+            return prev === 'light' ? 'dark' : 'light';
+        });
+    };
     const colorMode = useMemo(
         () => ({
-            toggleColorMode: () => setMode((prev) => (prev === 'light' ? 'dark' : 'light')),
+            toggleColorMode: () => handleOnchangeMode(),
         }),
         [],
     );

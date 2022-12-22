@@ -15,11 +15,9 @@ export default function ModalDeleteUser(props) {
     return (
         <div>
             <Dialog open={open} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-                <DialogTitle id="alert-dialog-title">{'Are you sure you want to delete the user?'}</DialogTitle>
+                <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        The user deletion can still be restored in the recycle bin. Please be careful
-                    </DialogContentText>
+                    <DialogContentText id="alert-dialog-description">{props.content}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="redAccent" style={{ fontWeight: 700, fontSize: '14px' }}>

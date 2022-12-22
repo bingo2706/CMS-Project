@@ -16,11 +16,11 @@ import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import { createNewUser } from '../../services/userService';
 import { toast } from 'react-toastify';
-
+import { FORMAT, TYPE_ALLCODE } from '../../utils/constant';
 const Form = () => {
     const isNonMobile = useMediaQuery('(min-width:600px)');
-    var { data: dataRole } = useFetchAllcode('ROLE');
-    var { data: dataGender } = useFetchAllcode('GENDER');
+    var { data: dataRole } = useFetchAllcode(TYPE_ALLCODE.ROLE);
+    var { data: dataGender } = useFetchAllcode(TYPE_ALLCODE.GENDER);
 
     const [inputValues, setInputValues] = useState({
         image: '',
@@ -174,7 +174,7 @@ const Form = () => {
                     <Stack sx={{ gridColumn: 'span 2' }} spacing={3}>
                         <DesktopDatePicker
                             label="Date of birth"
-                            inputFormat="MM/DD/YYYY"
+                            inputFormat={FORMAT.FORMAR_DATE}
                             value={inputValues.date}
                             name="date"
                             onChange={(value) => setInputValues({ ...inputValues, date: value['$d'] })}

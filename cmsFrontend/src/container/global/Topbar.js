@@ -9,6 +9,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import Language from '../../components/Language';
 import UserInfoMenu from '../../components/UserInfoMenu';
+
 const Topbar = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);

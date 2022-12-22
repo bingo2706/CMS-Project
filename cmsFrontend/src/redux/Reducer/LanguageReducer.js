@@ -1,6 +1,14 @@
-import { LANGUAGE } from '../../utils/constant';
+import { LANGUAGE, USER_REFERENCE } from '../../utils/constant';
+const fetchUserReference = () => {
+    let userReference = JSON.parse(localStorage.getItem(USER_REFERENCE.USER_REFERENCE));
+    if (userReference.language) {
+        return userReference.language;
+    } else {
+        return 'vi';
+    }
+};
 const initState = {
-    language: 'vi',
+    language: fetchUserReference(),
 };
 
 const LanguageReducer = (state = initState, action) => {

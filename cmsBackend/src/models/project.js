@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-           
+            Project.belongsTo(models.Allcode, { foreignKey: 'statusId', targetKey: 'code', as: 'statusProjectData' })
         }
     };
     Project.init({
@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
         statusId: DataTypes.STRING,
         name: DataTypes.STRING,
         startDate: DataTypes.STRING,
-        endDate:DataTypes.STRING
+        endDate:DataTypes.STRING,
+        isDeleted: DataTypes.BOOLEAN
     }, {
         sequelize,
         modelName: 'Project',

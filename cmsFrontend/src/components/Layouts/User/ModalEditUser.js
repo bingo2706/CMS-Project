@@ -69,6 +69,7 @@ export default function ModalEditUser(props) {
                         <Stack sx={{ marginTop: '10px' }}>
                             <DesktopDatePicker
                                 label="Date of birth"
+                                data-testid="date-picker"
                                 inputFormat={FORMAT.FORMAR_DATE}
                                 value={inputValues.dob}
                                 name="dob"
@@ -79,10 +80,20 @@ export default function ModalEditUser(props) {
                     </LocalizationProvider>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleUpdateUser} color="secondary" style={{ fontWeight: 700, fontSize: '14px' }}>
+                    <Button
+                        data-testid="button-save"
+                        onClick={handleUpdateUser}
+                        color="secondary"
+                        style={{ fontWeight: 700, fontSize: '14px' }}
+                    >
                         Save
                     </Button>
-                    <Button onClick={handleClose} color="redAccent" style={{ fontWeight: 700, fontSize: '14px' }}>
+                    <Button
+                        data-testid="button-cancel"
+                        onClick={handleClose}
+                        color="redAccent"
+                        style={{ fontWeight: 700, fontSize: '14px' }}
+                    >
                         Cancle
                     </Button>
                 </DialogActions>

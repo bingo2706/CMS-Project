@@ -209,7 +209,7 @@ export const useMode = () => {
     const [mode, setMode] = useState();
     useEffect(() => {
         let userReference = JSON.parse(localStorage.getItem(USER_REFERENCE.USER_REFERENCE));
-        if (userReference.them) {
+        if (userReference && userReference.them) {
             setMode(userReference.them);
         } else {
             setMode('dark');

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>Logout Page</title>
+        <style>
+            @import url(https://fonts.googleapis.com/css?family=Roboto:400,100);
+
+            body {
+                font-family: 'Roboto', sans-serif;
+                margin-top: 25px;
+                margin-bottom: 25px;
+                background-color: #141b2d;
+                color: #fff;
+            }
+            h1 {
+                color: #4cceac;
+                font-weight: 300;
+            }
+            .container {
+                padding: 40px;
+                padding-top: 0px;
+                padding-bottom: 10px;
+                width: 400px;
+                background-color: #1f2a40;
+                margin: 0 auto 10px;
+                border-radius: 2px;
+                box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+
+           
+
+            input[type='text'],
+            input[type='email'],
+            input[type='password'] {
+                height: 44px;
+                font-size: 16px;
+                width: 100%;
+                margin-bottom: 10px;
+                -webkit-appearance: none;
+                background: #fff;
+
+                padding: 0 8px;
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+            }
+
+          
+            input:focus {
+                border-color: #4cceac;
+
+                outline: 0 none;
+            }
+            
+           a {
+                text-decoration: none;
+                color: #fff;
+                font-weight: 400;
+                text-align: center;
+                display: inline-block;
+                opacity: 0.6;
+            }
+
+           
+
+            button {
+                cursor: pointer;
+                border: 0px;
+                color: #fff;
+                text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+                background-color: #4cceac;
+                border: none;
+            }
+        </style>
+    </head>
+    <body>
+        
+           
+           
+            <div class="container">
+                <h1>Do you want to sign out now ?</h1>
+                <form id="op.logoutForm" method="post" action="http://localhost:8004/oidc/session/end/confirm"><input type="hidden" name="xsrf" value="807e446034a3b386db30c654ea0da3795de7bf2f585b4123"></form>
+                <button autofocus="" type="submit" form="op.logoutForm" value="yes" name="logout">Yes, sign me out Thanh</button>
+                <button type="submit" form="op.logoutForm">No, stay signed in</button>
+              </div>
+      
+       
+    </body>
+</html>

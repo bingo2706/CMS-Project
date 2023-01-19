@@ -9,6 +9,8 @@ import TrashPage from '../../pages/Trash/TrashPage';
 import { Route, Routes } from 'react-router-dom';
 import AddProject from '../../pages/Project/AddProject';
 import DetailProject from '../../pages/Project/DetailProject';
+import PaymentPage from '../../pages/Payment/PaymentPage';
+import AccountPage from '../../pages/Account/AccountPage';
 
 function AdminRouter() {
     return (
@@ -23,6 +25,8 @@ function AdminRouter() {
                 <Route path="/project" element={<Project />} />
                 <Route path="/project/detail/:id" element={<DetailProject />} />
                 <Route path="/trash" element={<TrashPage />} />
+                <Route path="/account" element={<AccountPage />} />
+                <Route path="/payment" element={<PaymentPage />} />
             </Routes>
         </>
     );

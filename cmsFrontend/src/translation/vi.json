@@ -4,7 +4,9 @@
         "dashboard": "Trang chủ",
         "user": "Người dùng",
         "project": "Dự án",
-        "trash": "Thùng rác"
+        "trash": "Thùng rác",
+        "payment": "Thanh toán",
+        "account": "Tài khoản"
     },
     "dashboardPage": {
         "dashboard": "TRANG CHỦ",

@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBoxOutlined';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
+import PaymentOutlinedIcon from '@mui/icons-material/PaymentOutlined';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -15,21 +16,16 @@ import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import ItemSidebar from '../components/Layouts/Sidebar/ItemSidebar';
 import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import { FormattedMessage } from 'react-intl';
- import { useFetchUserInfo } from '../hooks/fetchInfoUser';
 import { useSelector } from 'react-redux';
+import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 const drawerWidth = 240;
 
 export default function Sidebar() {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [open, setOpen] = React.useState(true);
-    const { data: dataUserLocal } = useFetchUserInfo();
-    var dataUser = useSelector((state) => state.UserReducer.dataUser);
-    
-    if(!dataUser.id){
-       
-        dataUser = dataUserLocal
-    }
+    let dataUser = useSelector((state) => state.UserReducer.dataUser);
+
     const openedMixin = (theme) => ({
         width: drawerWidth,
         transition: theme.transitions.create('width', {
@@ -114,11 +110,11 @@ export default function Sidebar() {
                             />
                         </Box>
                         <Box textAlign="center">
-                            <Typography variant="h2" color={colors.grey[100]} fontWeight="bold" sx={{ m: '10px 0 0 0' }}>
+                            <Typography variant="h3" color={colors.grey[100]} fontWeight="bold" sx={{ m: '10px 0 0 0' }}>
                                 {dataUser?.firstName + ' ' + dataUser?.lastName}
                             </Typography>
                             <Typography variant="h5" color={colors.greenAccent[500]}>
-                                <FormattedMessage id="sidebar.titleJob" />
+                                {dataUser?.roleData?.value}
                             </Typography>
                         </Box>
                     </Box>
@@ -138,6 +134,19 @@ export default function Sidebar() {
                         url="/admin/project"
                         open={open}
                         text={<FormattedMessage id="sidebar.project" />}
+                    />
+                    <Divider />
+                    <ItemSidebar
+                        icon={<SwitchAccountIcon />}
+                        url="/admin/account"
+                        open={open}
+                        text={<FormattedMessage id="sidebar.account" />}
+                    />
+                    <ItemSidebar
+                        icon={<PaymentOutlinedIcon />}
+                        url="/admin/payment"
+                        open={open}
+                        text={<FormattedMessage id="sidebar.payment" />}
                     />
                 </List>
                 <Divider />

@@ -8,8 +8,9 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { TYPE_LOGIN } from '../../utils/constant';
-import {HandleLoginStart} from '../../redux/action/UserAction'
-import {useDispatch} from 'react-redux'
+import { HandleLoginStart } from '../../redux/action/UserAction';
+import { useDispatch } from 'react-redux';
+
 export default function LoginPage() {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -19,6 +20,7 @@ export default function LoginPage() {
         email: '',
         password: '',
     });
+
     const dispatch = useDispatch();
     const handleOnChange = (event) => {
         const { name, value } = event.target;
@@ -26,13 +28,14 @@ export default function LoginPage() {
     };
     const handleLogin = async () => {
         localStorage.setItem(TYPE_LOGIN.TYPE_LOGIN, TYPE_LOGIN.TRADITIONAL);
+
+        // ===================== LOGIN TRUYEN THONG//////////////////
         let res = await handleLoginService({
             email: inputValues.email,
             password: inputValues.password,
         });
         if (res && res.errCode === 0) {
-            localStorage.setItem(TYPE_LOGIN.USER_DATA, JSON.stringify(res.user));
-            dispatch(HandleLoginStart(res.user))
+            dispatch(HandleLoginStart(res.user));
             if (res.user.roleId === TYPE_LOGIN.ROLE_ADMIN) {
                 navigate('/admin');
             } else {

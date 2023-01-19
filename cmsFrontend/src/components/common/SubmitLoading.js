@@ -1,10 +1,14 @@
 import { Backdrop, CircularProgress } from '@mui/material';
 import React from 'react';
+import { Box } from '@mui/material';
 
-export default function SubmitLoading({ loading }) {
+const SubmitLoading = ({ loading }) => {
     return (
-        <Backdrop sx={{ color: '#fff', zIndex: 1000000 }} open={loading}>
-            <CircularProgress color="redAccent" />
-        </Backdrop>
+        <Box>
+            <Backdrop sx={{ color: '#fff', zIndex: 1000000 }} open={loading}>
+                <CircularProgress color="redAccent" />
+            </Backdrop>
+        </Box>
     );
-}
+};
+export default SubmitLoading;

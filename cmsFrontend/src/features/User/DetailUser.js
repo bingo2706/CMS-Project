@@ -9,19 +9,22 @@ import moment from 'moment';
 import ModalEditUser from '../../components/Layouts/User/ModalEditUser';
 import { toast } from 'react-toastify';
 import { FORMAT } from '../../utils/constant';
+import SubmitLoading from '../../components/common/SubmitLoading';
 const DetailUser = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [dataUser, setdataUser] = useState({});
     const { id } = useParams();
     const [isOpen, setisOpen] = useState(false);
-
+    const [LoadingSubmit, setLoadingSubmit] = useState(false);
     useEffect(() => {
         fetchDetailUser(id);
     }, [id]);
     const fetchDetailUser = async (id) => {
+        setLoadingSubmit(true);
         let res = await getDetailUserById(id);
         if (res && res.errCode === 0) {
+            setLoadingSubmit(false);
             setdataUser(res.data);
         }
     };
@@ -55,7 +58,7 @@ const DetailUser = () => {
                 <Typography variant="h5" color={colors.grey[100]}>
                     {label}
                 </Typography>
-                <Typography variant="h5" color={colors.grey[100]}>
+                <Typography data-testid={label} variant="h5" color={colors.grey[100]}>
                     {Array.isArray(value) === true ? value.toString().replace(',', ', ') : value}
                 </Typography>
             </Box>
@@ -107,6 +110,7 @@ const DetailUser = () => {
                 </Box>
             </Box>
             {isOpen && <ModalEditUser handleUpdateUser={handleUpdateUser} data={dataUser} open={isOpen} handleClose={handleClose} />}
+            <SubmitLoading loading={LoadingSubmit} />
         </Box>
     );
 };

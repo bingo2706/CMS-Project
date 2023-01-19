@@ -1,4 +1,4 @@
-import axios from '../axios';
+import axios from '../axios/axios';
 const createNewProject = (data) => {
     return axios.post(`/api/create-new-project`, data);
 };

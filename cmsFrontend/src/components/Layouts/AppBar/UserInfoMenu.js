@@ -9,16 +9,11 @@ import IconButton from '@mui/material/IconButton';
 import Logout from '@mui/icons-material/Logout';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import Tooltip from '@mui/material/Tooltip';
-import { useNavigate } from 'react-router-dom';
-import { useFetchUserInfo } from '../../../hooks/fetchInfoUser';
-import { useAuth0 } from '@auth0/auth0-react';
-import { TYPE_LOGIN } from '../../../utils/constant';
-export default function UserInfoMenu() {
+
+export default function UserInfoMenu(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
-    const navigate = useNavigate();
-    const { data: dataUser } = useFetchUserInfo();
-    const { logout } = useAuth0();
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -26,11 +21,10 @@ export default function UserInfoMenu() {
         setAnchorEl(null);
     };
     const handleLogout = () => {
-        localStorage.removeItem(TYPE_LOGIN.USER_DATA);
-        logout({ returnTo: `${window.location.origin}/login` });
+        props.handleLogout();
     };
     const handleGotoAcount = () => {
-        navigate(`/admin/user/detail/${dataUser.id}`);
+        props.handleGotoAcount();
     };
     return (
         <React.Fragment>
@@ -76,7 +70,7 @@ export default function UserInfoMenu() {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem onClick={() => handleGotoAcount()}>
+                <MenuItem data-testid="menu-item" onClick={() => handleGotoAcount()}>
                     <Avatar /> My account
                 </MenuItem>
                 <Divider />

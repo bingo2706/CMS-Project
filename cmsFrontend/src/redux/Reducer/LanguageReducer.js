@@ -1,7 +1,7 @@
 import { LANGUAGE, USER_REFERENCE } from '../../utils/constant';
 const fetchUserReference = () => {
     let userReference = JSON.parse(localStorage.getItem(USER_REFERENCE.USER_REFERENCE));
-    if (userReference.language) {
+    if (userReference && userReference.language) {
         return userReference.language;
     } else {
         return 'vi';

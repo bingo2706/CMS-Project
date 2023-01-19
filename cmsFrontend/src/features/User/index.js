@@ -33,21 +33,26 @@ function ManageUser() {
     };
     const fetchUser = async () => {
         setisLoading(true);
-        let res = await getAllUsers({
-            limit: '',
-            offset: '',
-            keyword: '',
-            isDeleted: 0,
-        });
-        if (res && res.errCode === 0) {
-            res.data = res.data.map((item) => {
-                return {
-                    ...item,
-                    roleName: item.roleData.value,
-                };
+        try {
+            let res = await getAllUsers({
+                limit: '',
+                offset: '',
+                keyword: '',
+                isDeleted: 0,
             });
+            if (res && res.errCode === 0) {
+                res.data = res.data.map((item) => {
+                    return {
+                        ...item,
+                        roleName: item.roleData.value,
+                    };
+                });
+                setisLoading(false);
+                setdataUser(res.data);
+            }
+        } catch (error) {
+            toast.error(error.response.data.errMessage);
             setisLoading(false);
-            setdataUser(res.data);
         }
     };
     const handleClose = (isOpen) => {

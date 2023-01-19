@@ -20,10 +20,22 @@ export default function ModalDeleteUser(props) {
                     <DialogContentText id="alert-dialog-description">{props.content}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="redAccent" style={{ fontWeight: 700, fontSize: '14px' }}>
+                    <Button
+                        data-testid="button-cancel"
+                        onClick={handleClose}
+                        id="button-cancel"
+                        color="redAccent"
+                        style={{ fontWeight: 700, fontSize: '14px' }}
+                    >
                         Cancle
                     </Button>
-                    <Button onClick={handleAgree} color="secondary" style={{ fontWeight: 700, fontSize: '14px' }}>
+                    <Button
+                        data-testid={'Save'}
+                        onClick={handleAgree}
+                        id="button-cancel"
+                        color="secondary"
+                        style={{ fontWeight: 700, fontSize: '14px' }}
+                    >
                         Save
                     </Button>
                 </DialogActions>

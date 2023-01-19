@@ -213,7 +213,56 @@ let getDetailUserById = (userid) => {
         }
     });
 };
+let getDetailUserByEmail = (email) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!email) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters!',
+                });
+            } else {
+                let res = await db.User.findOne({
+                    where: { email: email, isDeleted: false },
+                    attributes: {
+                        exclude: ['password'],
+                    },
+                    include: [
+                        { model: db.Allcode, as: 'roleData', attributes: ['value', 'code'] },
+                        { model: db.Allcode, as: 'genderData', attributes: ['value', 'code'] },
+                    ],
+                    raw: true,
+                    nest: true,
+                });
 
+                let project = await db.Userproject.findAll({ where: { userId: res.id } });
+                if (project.length > 0) {
+                    project = await Promise.all(
+                        project.map(async (item) => {
+                            let data = await db.Project.findOne({ where: { id: item.projectId } });
+                            return {
+                                ...item,
+                                data: data,
+                            };
+                        }),
+                    );
+
+                    res.projectData = project;
+                }
+
+                if (res.image) {
+                    res.image = new Buffer(res.image, 'base64').toString('binary');
+                }
+                resolve({
+                    errCode: 0,
+                    data: res,
+                });
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 let handleSoftDeleteUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -320,4 +369,5 @@ module.exports = {
     handleSoftDeleteUser: handleSoftDeleteUser,
     handleRestoreUser: handleRestoreUser,
     handleLogin: handleLogin,
+    getDetailUserByEmail: getDetailUserByEmail,
 };

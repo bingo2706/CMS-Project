@@ -117,6 +117,15 @@ function TrashPage() {
                     isDeleted: 1,
                 },
             });
+            dispatch({
+                type: PROJECT.GET_ALL_PROJECT_START,
+                payload: {
+                    limit: '',
+                    offset: '',
+                    keyword: '',
+                    isDeleted: 0,
+                },
+            });
         }
     };
     const handleClose = (isOpen) => {

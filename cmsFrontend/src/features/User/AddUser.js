@@ -9,7 +9,8 @@ import { useState } from 'react';
 import CommonUtils from '../../utils/CommonUtils';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Lightbox from 'react-image-lightbox';
-import 'react-image-lightbox/style.css';
+
+// import 'react-image-lightbox/style.css';
 import { createNewUser } from '../../services/userService';
 import { toast } from 'react-toastify';
 import { FORMAT, TYPE_ALLCODE } from '../../utils/constant';
@@ -43,48 +44,54 @@ function AddUser() {
         if (file.size > 31312281) {
             alert('Dung lượng file bé hơn 30mb');
         } else {
+            console.log('file', file);
             let base64 = await CommonUtils.getBase64(file);
             let objectUrl = URL.createObjectURL(file);
             setInputValues({ ...inputValues, image: base64, imageReview: objectUrl });
         }
     };
     let openPreviewImage = () => {
+        console.log('click');
         if (!inputValues.imageReview) return;
 
         setInputValues({ ...inputValues, isOpen: true });
     };
     const handleSaveUser = async () => {
-        let res = await createNewUser({
-            email: inputValues.email,
-            password: inputValues.password,
-            firstName: inputValues.firstName,
-            lastName: inputValues.lastName,
-            roleId: inputValues.roleId,
-            genderId: inputValues.genderId,
-            phonenumber: inputValues.phonenumber,
-            avatar: inputValues.image,
-            dob: inputValues.date,
-        });
-        if (res && res.errCode === 0) {
-            toast.success('Lưu người dùng thành công');
-            setInputValues({
-                ...inputValues,
-                image: '',
-                imageReview: '',
-                isOpen: false,
-                firstName: '',
-                lastName: '',
-                email: '',
-                phonenumber: '',
-                genderId: '',
-                roleId: '',
-                password: '',
-                date: new Date(),
-                genderOptions: '',
-                roleOptions: '',
+        try {
+            let res = await createNewUser({
+                email: inputValues.email,
+                password: inputValues.password,
+                firstName: inputValues.firstName,
+                lastName: inputValues.lastName,
+                roleId: inputValues.roleId,
+                genderId: inputValues.genderId,
+                phonenumber: inputValues.phonenumber,
+                avatar: inputValues.image,
+                dob: inputValues.date,
             });
-        } else {
-            toast.error(res.errMessage);
+            if (res && res.errCode === 0) {
+                toast.success('Lưu người dùng thành công');
+                setInputValues({
+                    ...inputValues,
+                    image: '',
+                    imageReview: '',
+                    isOpen: false,
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    phonenumber: '',
+                    genderId: '',
+                    roleId: '',
+                    password: '',
+                    date: new Date(),
+                    genderOptions: '',
+                    roleOptions: '',
+                });
+            } else {
+                toast.error(res.errMessage);
+            }
+        } catch (error) {
+            toast.error(error.response.data.errMessage);
         }
     };
     return (
@@ -189,8 +196,9 @@ function AddUser() {
                 />
             </Box>
             <Box display="flex" alignItems="flex-start" flexDirection="column" gap="10px" mt="10px">
-                <span>Avatar</span>
+                <span id="title">Avatar</span>
                 <img
+                    data-testid="imgReview"
                     onClick={() => openPreviewImage()}
                     src={inputValues.image}
                     style={{ width: '100px', height: '100px', objectFit: 'cover', cursor: 'pointer', borderRadius: 5 }}
@@ -209,7 +217,11 @@ function AddUser() {
             </Box>
 
             {inputValues.isOpen === true && (
-                <Lightbox mainSrc={inputValues.imageReview} onCloseRequest={() => setInputValues({ ...inputValues, isOpen: false })} />
+                <Lightbox
+                    data-testid="Lightbox"
+                    mainSrc={inputValues.imageReview}
+                    onCloseRequest={() => setInputValues({ ...inputValues, isOpen: false })}
+                />
             )}
         </Box>
     );

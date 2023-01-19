@@ -4,7 +4,9 @@
         "dashboard": "Dashboard",
         "user": "User",
         "project": "Project",
-        "trash": "Trash"
+        "trash": "Trash",
+        "payment": "Payment",
+        "account": "Account"
     },
     "dashboardPage": {
         "dashboard": "DASHBOARD",

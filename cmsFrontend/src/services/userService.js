@@ -1,4 +1,4 @@
-import axios from '../axios';
+import axios from '../axios/axios';
 
 const getAllUsers = (data) => {
     return axios.get(`/api/get-all-user?limit=${data.limit}&offset=${data.offset}&keyword=${data.keyword}&isDeleted=${data.isDeleted}`);
@@ -28,7 +28,9 @@ const RestoreUserService = (data) => {
 const getDetailUserById = (id) => {
     return axios.get(`/api/get-detail-user-by-id?id=${id}`);
 };
-
+const getDetailUserByEmail = (email) => {
+    return axios.get(`/api/get-detail-user-by-email?email=${email}`);
+};
 export {
     getAllUsers,
     createNewUser,
@@ -38,4 +40,5 @@ export {
     RestoreUserService,
     DeleteUserService,
     handleLoginService,
+    getDetailUserByEmail,
 };

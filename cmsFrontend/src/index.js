@@ -4,24 +4,20 @@ import './assets/index.css';
 import App from './App';
 import { StyledEngineProvider } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom';
-import store from './redux/store';
+import { store, persistor } from './redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import IntlProviderWrapper from './hoc/IntlProviderWrapper';
-import { Auth0Provider } from '@auth0/auth0-react';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <StyledEngineProvider injectFirst>
         <BrowserRouter>
             <Provider store={store}>
-                <IntlProviderWrapper>
-                    <Auth0Provider
-                        domain={process.env.REACT_APP_DOMAIN}
-                        clientId={process.env.REACT_APP_CLIENT_ID}
-                        redirectUri={`${window.location.origin}/admin`}
-                    >
+                <PersistGate loading={null} persistor={persistor}>
+                    <IntlProviderWrapper>
                         <App />
-                    </Auth0Provider>
-                </IntlProviderWrapper>
+                    </IntlProviderWrapper>
+                </PersistGate>
             </Provider>
         </BrowserRouter>
     </StyledEngineProvider>,

@@ -22,13 +22,14 @@ export default function Language() {
     };
     const fetchUserReference = () => {
         let userReference = JSON.parse(localStorage.getItem(USER_REFERENCE.USER_REFERENCE));
-        if (userReference.language) {
+        if (userReference && userReference.language) {
             return userReference.language;
         } else {
             return 'vi';
         }
     };
     const [url, seturl] = React.useState(AvatarUrl[fetchUserReference()]);
+    //const [url, seturl] = React.useState(AvatarUrl['vi']);
     const dispatch = useDispatch();
     const handleClick = (event, value) => {
         setAnchorEl(event.currentTarget);

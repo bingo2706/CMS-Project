@@ -60,7 +60,18 @@ let getDetailUserById = async (req, res) => {
         });
     }
 };
-
+let getDetailUserByEmail = async (req, res) => {
+    try {
+        let data = await userService.getDetailUserByEmail(req.query.email);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server',
+        });
+    }
+};
 let handleSoftDeleteUser = async (req, res) => {
     try {
         let data = await userService.handleSoftDeleteUser(req.body);
@@ -106,4 +117,5 @@ module.exports = {
     handleSoftDeleteUser: handleSoftDeleteUser,
     handleRestoreUser: handleRestoreUser,
     handleLogin: handleLogin,
+    getDetailUserByEmail: getDetailUserByEmail,
 };
